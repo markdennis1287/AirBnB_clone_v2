@@ -117,7 +117,7 @@ class HBNBCommand(cmd.Cmd):
         """ Create an object of any class"""
         try:
             class_name = args.split(" ")[0]
-            except IndexError:
+        except IndexError:
                 pass
 
         if not class_name:
