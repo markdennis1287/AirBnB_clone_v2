@@ -131,15 +131,15 @@ class HBNBCommand(cmd.Cmd):
         new_instance = eval(class_name())
 
         for i in range(1, len(all_list)):
-            key, value tuple(all_list[i].split("="))
+            key, value = tuple(all_list[i].split("="))
             if value.startswith('""'):
-                value = value.strip('""')replace("_", " ")
+                value = value.strip('""').replace("_", " ")
             else:
                 try:
                     value = eval(value)
                 except Exception:
                     print(f"** couldn't evaluate value ")
-                        pass
+                    pass
             if hasattr(new_instance, key):
                 setattr(new_instance, key, value)
 
