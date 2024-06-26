@@ -128,7 +128,7 @@ class HBNBCommand(cmd.Cmd):
             return
     #allow for object creation with given parameters       
         all_list = args.split(" ")
-        new_instance = eval(class_name())
+        new_instance = eval(class_name)()
 
         for i in range(1, len(all_list)):
             key, value = tuple(all_list[i].split("="))
