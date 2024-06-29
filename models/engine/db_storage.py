@@ -5,7 +5,7 @@ Contains the class DBStorage
 
 import models
 from models.amenity import Amenity
-from models.base_model import Base, BaseModel
+from models.base_model import Base
 from models.city import City
 from models.place import Place
 from models.review import Review
@@ -31,6 +31,10 @@ class DBStorage:
         self.__engine = create_engine(db_url, pool_pre_ping=True)
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
+
+
+        Session = scoped_session(sessionmaker(bind=self.__engine, expire_on_commit=False))
+        self.__session = Session()
 
     def all(self, cls=None):
         """ Returns a dictionary of models currently in storage"""
@@ -67,6 +71,8 @@ class DBStorage:
     def reload(self):
         """reloads data from the database"""
         Base.metadata.create_all(self.__engine)
+        self.__session.rollback()
+        self.__session.close()
         sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(sess_factory)
         self.__session = Session()
