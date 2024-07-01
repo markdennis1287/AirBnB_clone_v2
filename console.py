@@ -10,6 +10,8 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+from datetime import datetime
+import shlex
 
 
 class HBNBCommand(cmd.Cmd):
@@ -144,8 +146,8 @@ class HBNBCommand(cmd.Cmd):
                 setattr(new_instance, key, value)
 
         storage.new(new_instance)
-        print(new_instance.id)
         new_instance.save()
+        print(new_instance.id)
 
     def help_create(self):
         """ Help information for the create method """

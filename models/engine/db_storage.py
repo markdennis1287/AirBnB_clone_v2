@@ -5,7 +5,7 @@ Contains the class DBStorage
 
 import models
 from models.amenity import Amenity
-from models.base_model import Base
+from models.base_model import Base, BaseModel
 from models.city import City
 from models.place import Place
 from models.review import Review
@@ -41,15 +41,12 @@ class DBStorage:
         obj_list = []
         if cls:
             if isinstance(cls, str):
-                try:
-                    cls = globals()[cls]
-                except KeyError:
-                    pass
-            if cls and issubclass(cls, Base):
-                obj_list = self.__session.query(cls).all()
+                cls = eval(cls)
+            obj_list = self.__session.query(cls).all()
         else:
-            for subclass in Base.__subclasses__():
-                obj_list.extend(self.__session.query(subclass).all())
+            for class_name in [User, State, City, Amenity, Place, Review]:
+                obj_list.extend(self.__session.query(class_name).all())
+
         obj_dict = {}
         for obj in obj_list:
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
@@ -58,6 +55,8 @@ class DBStorage:
 
     def new(self, obj):
         """add the object to the current database session"""
+        if obj in self.__session:
+            self.__session.expunge(obj)
         self.__session.add(obj)
 
     def save(self):
@@ -71,8 +70,6 @@ class DBStorage:
     def reload(self):
         """reloads data from the database"""
         Base.metadata.create_all(self.__engine)
-        self.__session.rollback()
-        self.__session.close()
         sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(sess_factory)
         self.__session = Session()
