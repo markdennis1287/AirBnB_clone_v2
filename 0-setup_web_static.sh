@@ -2,7 +2,7 @@
 # Bash script that sets up your web servers for the deployment of web_static
 
 apt-get -y update > /dev/null
-apt-get install -y nginx > /dev/null
+apt-get install -y nginx apt-utils > /dev/null
 
 # Create all necessary directories and file
 mkdir -p /data/web_static/releases/test/
