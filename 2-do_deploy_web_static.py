@@ -14,7 +14,8 @@ def do_deploy(archive_path):
         return False
 
     try:
-        arc_tgz = archive_path.split("/")[-1].split('.')[0]
+        arc_tgz = archive_path.split("/")[-1]
+        arc_name = arc_tgz.split('.')[0]
 
         # Upload archive to the server
         put(archive_path, '/tmp/')
@@ -23,7 +24,7 @@ def do_deploy(archive_path):
         run('mkdir -p /data/web_static/releases/')
 
         # Save folder paths in variables
-        uncomp_fold = '/data/web_static/releases/{}'.format(arc_tgz)
+        uncomp_fold = '/data/web_static/releases/{}'.format(arc_name)
         tmp_location = '/tmp/{}'.format(arc_tgz)
 
         # Run remote commands on the server
